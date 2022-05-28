@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+<div class="w-full md:w-1/2 p-3">
+    <div class="bg-white border rounded shadow">
+        <div class="border-b p-3 flex flex-row justify-between">
+            <h5 class="font-bold uppercase text-gray-600">{{ customer_monthly_summary.heading }}</h5>
+            <h5 class="font-bold uppercase text-gray-600">From: {{customer_monthly_summary.starts_from}} 
+                <span class="ml-4"> To: {{customer_monthly_summary.end}}</span>
+            </h5>
+        </div>
+        <div class="p-4 grid grid-cols-2 ">
+            {% for key, value in customer_monthly_summary.summary.items %}
+
+            <div class="border border-pink-500 px-4 py-2 mx-2 my-3 bg-emerald-500 shadow">
+                <div class="uppercase text-gray-600  font-bold">
+                    <h3 class="leading-5 text-center">{{ value.title}}</h3>
+                    <hr>
+                </div>
+                <div class="text-center p-2">
+                    <div class="text-6xl font-bold m-4 totalTicket">{{value.qty.count}}</div>
+                    <P class="text-sm text-gray-600 tracking-tighter">{{value.desc}}</P>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+<script>
+
+    // $(".totalTicket").countMe(300, 30);
+</script>
+{% endblock body %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+<div class="w-full md:w-1/2 p-3">
+    <div class="bg-white border rounded shadow">
+        <div class="border-b p-3">
+            <h5 class="font-bold uppercase text-gray-600">{{ users_recent_ticket.title }}</h5>
+        </div>
+        <div class="p-7">
+            {% for ticket in users_recent_ticket.tickets %}
+            <div class="py-3">
+                <div class="flex-shrink pr-3 my-2">
+                    <div class="flex items-center">
+                        <h5 class="font-bold mx-1 text-sm uppercase text-gray-700">{{ ticket }}</h5>
+                        <p class="rounded rounded-xl border leading-1 mx-5 px-2 bg-gray-200  border-pink-500 font-mono text-xs font-bold">
+                            {% if ticket.is_opened and ticket.assigned_to is not null and not ticket.is_closed %}
+                            <span>Progressing</span>
+
+                            {% elif ticket.is_closed and ticket.closed_by is not null %}
+                                <span>Closed</span>
+
+                            {% elif ticket.assigned_to is not null  and not ticket.is_opened and not ticket.is_closed %}
+                            <span>Assigned</span>
+
+                            {% else %}
+                            <span class="text-green-600" >Pending</span>
+
+                            {% endif %}
+                        </p>
+
+                    </div>
+                    <p class='mx-1 text-sm text-grey-300'>{{ ticket.description|truncatechars:100}}</p>
+                </div>
+                <button class="uppercase bg-pink-500 text-xs text-gray-200 px-2 leading-4 mx-1 rounded rounded-lg">
+                    <a href="#">follow up &rarr;</a>
+                </button>
+            </div>
+            <hr>
+
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock body %}
