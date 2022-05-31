@@ -7,67 +7,34 @@ Your Support Application
 
 {% block body %}
 
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+<body class="bg-gray-100  leading-normal tracking-normal">
     {% include 'home/navbar.html' %}
-    <div class="container w-full mx-auto pt-28">
-        <div class="flex flex-row flex-wrap flex-grow mt-2 ">
+    <div class="container w-full mx-auto pt-28 ">
+
+        <!-- message  -->
+        {% if msg %}
+            <div
+                class="max-w-xs shadow mx-auto py-1 border flex border-pink-300 shadow-md justify-center space-x-3 items-center rounded rounded-md text-center">
+                {% if type == 'success' %}
+                    <i class="far fa-check-circle text-green-600"></i>
+                {% else %}
+                    <i class="far fa-times-circle text-red-600"></i>
+                {% endif %}
+                <p class="text-md font-bold">{{msg}}</p>
+            </div>
+        {% endif %}
+
+        <!-- message -->
+
+
+        <div class="flex  flex-wrap flex-grow mt-2 h-full ">
             {% include 'home/ticketcard.html' %}
             {% include 'home/monthlysummary.html' %}
         </div>
+        {% include 'tickets/addticket.html' %}
     </div>
-    <script>
-        /*Toggle dropdown list*/
-        /*https://gist.github.com/slavapas/593e8e50cf4cc16ac972afcbad4f70c8*/
-
-        var userMenuDiv = document.getElementById("userMenu");
-        var userMenu = document.getElementById("userButton");
-
-        var navMenuDiv = document.getElementById("nav-content");
-        var navMenu = document.getElementById("nav-toggle");
-
-        document.onclick = check;
-
-        function check(e) {
-            var target = (e && e.target) || (event && event.srcElement);
-
-            //User Menu
-            if (!checkParent(target, userMenuDiv)) {
-                // click NOT on the menu
-                if (checkParent(target, userMenu)) {
-                    // click on the link
-                    if (userMenuDiv.classList.contains("invisible")) {
-                        userMenuDiv.classList.remove("invisible");
-                    } else { userMenuDiv.classList.add("invisible"); }
-                } else {
-                    // click both outside link and outside menu, hide menu
-                    userMenuDiv.classList.add("invisible");
-                }
-            }
-
-            //Nav Menu
-            if (!checkParent(target, navMenuDiv)) {
-                // click NOT on the menu
-                if (checkParent(target, navMenu)) {
-                    // click on the link
-                    if (navMenuDiv.classList.contains("hidden")) {
-                        navMenuDiv.classList.remove("hidden");
-                    } else { navMenuDiv.classList.add("hidden"); }
-                } else {
-                    // click both outside link and outside menu, hide menu
-                    navMenuDiv.classList.add("hidden");
-                }
-            }
-
-        }
-
-        function checkParent(t, elm) {
-            while (t.parentNode) {
-                if (t == elm) { return true; }
-                t = t.parentNode;
-            }
-            return false;
-        }
-    </script>
+    {% include 'home/footer.html' %}
+    
 </body>
 
 {% endblock body %}

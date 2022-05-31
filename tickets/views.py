@@ -1,14 +1,16 @@
 import datetime
 import imp
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.db.models import   Q
+from django.urls import reverse
+from tickets.forms import TicketForm
 from tickets.models import Ticket
 
 # Create your views here.
 
 
 def get_users_recent_ticket(request):
-    users_recent_ticket = Ticket.objects.filter(issued_by=  request.user.id)
+    users_recent_ticket = Ticket.objects.filter(issued_by=  request.user.id).order_by('-created_on')[:6]
     return users_recent_ticket
 
 
@@ -32,3 +34,21 @@ def get_customer_monthly_summary(request):
 
         'total_progressing_ticket': {'title': 'Total Progressing Ticket', 'desc': 'tickets are being solved', 'qty': total_progressing_ticket}
     }
+
+def add_new_ticket(request):
+    if request.user.is_authenticated:
+        form = TicketForm()
+        return {
+            'form': form
+        }
+    else:
+        return redirect(reverse('login'))
+
+
+
+def get_my_tickets(request):
+    my_tickets =  Ticket.objects.filter(issued_by= request.user.id).order_by('-created_on')
+    params = {
+        'my_tickets': my_tickets
+    }
+    return render(request, 'tickets/mytickets.html', params)

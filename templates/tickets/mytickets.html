@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+{% include 'home/navbar.html' %}
+<div class="container grid grid-cols-4 mx-10">
+    <div
+        class="container shadow border shadow-md mt-28 bg-white mb-6 col-span-3 max-w-4xl mx-auto  border border-gray-300 ">
+        <h3 class="uppercase text-gray-500 font-bold py-3 bg-gray-200 border border-pink-100 text-2xl text-center">your
+            tickets</h3>
+        <div class="overflow-y-scroll max-h-screen my-3 scroll-auto">
+            {% for ticket in my_tickets %}
+            <div class="shadow shadow-md h-auto mx-4 pt-8">
+                <div class="flex justify-between  p-2 border border-pink-200 font-bold bg-gray-50 ">
+                    <p class="uppercase">Issued On: {{ticket.created_on}}</p>
+
+                    {% if ticket.is_opened and ticket.assigned_to is not null and not ticket.is_closed %}
+                        <p class="uppercase">Status: Assigned</p>
+                    {% elif ticket.is_closed and ticket.closed_by is not null %}
+                        <p class="uppercase">Status: Closed</p>
+                    {% else %}
+                        <p class="uppercase">Status: Pending</p>
+                    {% endif %}
+
+                    <div class="flex  text-pink-500 space-x-3">
+                        <li class="list-none">
+                            <span class="tooltip tooltip tooltip-top " data-tip="Close Ticket">
+                                <a href="#"><i class="far fa-check-circle"></i></a>
+                            </span>
+                        </li>
+                        <li class="list-none">
+                            <span class="tooltip tooltip tooltip-top" data-tip="View Details">
+                                <a href="#"><i class="fas fa-list-ul" data-tooltip-target="tooltip-detial"></i></a>
+                            </span>
+                        </li>
+                        <li class="list-none">
+                            <span class="tooltip tooltip tooltip-top" data-tip="Edit">
+                                <a href="#"><i class="far fa-edit"></i></a>
+                            </span>
+                        </li>
+                    </div>
+                </div>
+                <div class="px-4 py-3">
+                    <h3 class="text-gray-700 font-bold uppercase leading-10 ">{{ticket.title}}</h3>
+                    <p class="text-gray-500">{{ticket.description|truncatechars:130}}</p>
+                </div>
+                <div class="footer py-3 bg-gray-100 flex space-x-3 justify-between px-2">
+                    <p class="uppercase text-xs font-bold">Opened by: {{ticket.opened_by}} </p>
+                    <p class="uppercase text-xs font-bold">closed by: {{ticket.closed_by}} </p>
+                    <p class="uppercase text-xs font-bold">closed on: {{ticket.closed_at}}</p>
+                </div>
+            </div>
+
+
+            {% endfor %}
+
+        </div>
+    </div>
+    <div class="container shadow border shadow-md mt-28 bg-white  h-50 mb-6">
+        <h3 class="uppercase text-gray-500 font-bold py-3 bg-gray-200 border border-pink-100 text-2xl text-center">
+            Filters</h3>
+        <div class="flex flex-col  mb-4 p-4">
+
+
+            <div class="flex-flex-col">
+                <h3 class="text-md py-3 font-bold">Duration</h3>
+                <div date-rangepicker class="flex items-center">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i class="far fa-calendar-alt w-5 h-5 text-pink-500  cursor-pointer"></i>
+                        </div>
+                        <input name="start" type="text" datepicker datepicker-format="yyyy/mm/dd"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-md  focus:outline-none  focus:border-pink-600  w-full pl-8"
+                            placeholder="Select date start">
+                    </div>
+                    <span class="mx-4 text-gray-500">to</span>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i class="far fa-calendar-alt w-5 h-5 text-pink-500 cursor-pointer"></i>
+                        </div>
+                        <input name="start" type="text" datepicker datepicker-format="yyyy/mm/dd"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-md  focus:outline-none  focus:border-pink-600  w-full pl-8"
+                            placeholder="Select date start">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="flex space-x-14">
+                <div class="flex flex-col">
+                    <h3 class="text-md py-3 font-bold ">Stage</h3>
+                    <div>
+                        <input id="pending" type="checkbox" value="" name="pending"
+                            class="w-4 h-4 text-pink-600 bg-gray-100 rounded border-gray-300 focus:outline-none">
+                        <label for="pending"
+                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Pendings</label>
+                    </div>
+
+                    <div>
+                        <input id="completed" type="checkbox" value="" name="completed"
+                            class="w-4 h-4 text-pink-600 bg-gray-100 rounded border-gray-300 focus:outline-none ">
+                        <label for="completed"
+                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Completed</label>
+                    </div>
+
+                    <div>
+                        <input id="progressing" type="checkbox" value="" name="progressing"
+                            class="w-4 h-4 text-pink-600 bg-gray-100 rounded border-gray-300 focus:outline-none ">
+                        <label for="progressing"
+                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Progressing</label>
+                    </div>
+                </div>
+
+
+
+                <div class="flex flex-col">
+                    <h3 class="text-md py-3 font-bold ">Priority</h3>
+                    <div>
+                        <input id="critical" type="checkbox" value="" name="critical"
+                            class="w-4 h-4 text-pink-600 bg-gray-100 rounded border-gray-300 focus:outline-none ">
+                        <label for="critical"
+                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Critical</label>
+                    </div>
+
+                    <div>
+                        <input id="medium" type="checkbox" value="" name="medium"
+                            class="w-4 h-4 text-pink-600 bg-gray-100 rounded border-gray-300 focus:outline-none ">
+                        <label for="medium"
+                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Medium</label>
+                    </div>
+
+                    <div>
+                        <input id="normal" type="checkbox" value="" name="normal"
+                            class="w-4 h-4 text-pink-600 bg-gray-100 rounded border-gray-300 focus:outline-none ">
+                        <label for="normal"
+                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Normal</label>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div class="flex text-center justify-center items-center my-4">
+                <button class="border shadow shadow-md px-5 py-2 bg-pink-600 rounded rounded-md text-white">
+                    submit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<hr class="text-black my-3 bg-black ">
+<div class="flex justify-center item-center">
+    {% include 'home/footer.html' %}
+</div>
+{% endblock body %}

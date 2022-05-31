@@ -25,7 +25,7 @@ class Ticket(models.Model):
     title =  models.CharField(max_length=200, null=False )
     description = models.TextField(null=False)
     attachment = models.ImageField(upload_to=avatar_directory_path,  blank=True)
-    issued_by  =models.ForeignKey(settings.AUTH_USER_MODEL,  related_name='issued_by',  on_delete=models.DO_NOTHING)
+    issued_by  =models.ForeignKey(settings.AUTH_USER_MODEL, default=User,  related_name='issued_by',  on_delete=models.DO_NOTHING)
     opened_by  = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='opened_by',  on_delete=models.DO_NOTHING)
     assigned_to =  models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='assigned_to', on_delete=models.DO_NOTHING)
     priority_id = models.ForeignKey(TicketPriority, on_delete=models.DO_NOTHING)
