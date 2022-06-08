@@ -44,11 +44,16 @@ class Ticket(models.Model):
 
 
 class Comment(models.Model):
+    def avatar_directory_path(instance, filename):
+        return '{2}/{1}'.format(instance.id, filename, 'attachments')
+
     id = models.AutoField(primary_key=True)
     ticket_id =  models.ForeignKey(Ticket,  on_delete=models.DO_NOTHING)
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL,  on_delete=models.DO_NOTHING)
     comment =  models.TextField(null=False)
     created_on =  models.DateTimeField(auto_now_add=True)
+    attachment = models.ImageField(upload_to=avatar_directory_path,  blank=True, null=True)
+
 
     def __str__(self):
         return self.comment

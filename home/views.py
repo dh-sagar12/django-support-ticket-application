@@ -12,13 +12,16 @@ from datetime import date, timedelta
 from account.models import User
 from tickets.forms import TicketForm
 from tickets.models import Ticket
-from tickets.views import add_new_ticket, get_customer_monthly_summary, get_users_recent_ticket
+from tickets.views import add_new_ticket, get_customer_monthly_summary, get_ticket_details_for_admin_panel, get_users_recent_ticket, get_monthly_ticket_and_solved_ticket_chart
 
 # Create your views here.
 @login_required(login_url='login')
 def home(request):
     if request.user.is_staff or request.user.is_admin:
-        return render(request, 'home/dashboard.html')
+        monthly_ticket_count = get_monthly_ticket_and_solved_ticket_chart(request)
+        print(monthly_ticket_count)
+        params = get_ticket_details_for_admin_panel(request)
+        return render(request, 'home/dashboard.html', params)
 
     elif request.user.is_active:
         users_recent_ticket = get_users_recent_ticket(request)

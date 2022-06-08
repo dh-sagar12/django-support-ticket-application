@@ -25,8 +25,13 @@ def loginView(request):
             if usr:
                 if usr.is_active:
                     authUser= authenticate(email= usr.email, password=password)
-                    django_login(request, authUser)
-                    return redirect(reverse('home'))
+                    if authUser:
+                        django_login(request, authUser)
+                        return redirect(reverse('home'))
+                    else:
+                        params ={"error": 'authentication failed'}
+                        return render(request, 'accounts/login.html', params)
+
                 else:
                     params = {'error': 'Inactive account'}
                 return render(request, 'accounts/login.html', params)

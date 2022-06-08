@@ -33,7 +33,7 @@
                     <p class='mx-1 text-sm text-grey-300'>{{ ticket.description|truncatechars:100}}</p>
                 </div>
                 <button class="uppercase bg-pink-500 text-xs text-gray-200 px-2 leading-4 mx-1 rounded rounded-lg">
-                    <a href="#">follow up &rarr;</a>
+                    <a href="{% url 'detail_ticket' pk=ticket.id %}">follow up &rarr;</a>
                 </button>
             </div>
             <hr>

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block message %}
+{% if messages %}
+        {% for message in messages %}
+            <p class='messages' id ='messages'>{{message}} </p>
+        {% endfor %}
+{% endif %}
+<p class="msgRes" ></p>
+
+<script>
+    setTimeout(() => {
+        try {
+            console.log('adding disply none');
+            document.getElementById('messages').style.display = 'none'
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }, 2000);
+</script>
+{% endblock message %}

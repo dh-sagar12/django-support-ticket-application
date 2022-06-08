@@ -7,6 +7,7 @@
         class="container shadow border shadow-md mt-28 bg-white mb-6 col-span-3 max-w-4xl mx-auto  border border-gray-300 ">
         <h3 class="uppercase text-gray-500 font-bold py-3 bg-gray-200 border border-pink-100 text-2xl text-center">your
             tickets</h3>
+            {% include 'home/message.html' %}
         <div class="overflow-y-scroll max-h-screen my-3 scroll-auto">
             {% for ticket in my_tickets %}
             <div class="shadow shadow-md h-auto mx-4 pt-8">
@@ -23,13 +24,22 @@
 
                     <div class="flex  text-pink-500 space-x-3">
                         <li class="list-none">
-                            <span class="tooltip tooltip tooltip-top " data-tip="Close Ticket">
-                                <a href="#"><i class="far fa-check-circle"></i></a>
+                            <span class="tooltip tooltip tooltip-top " id='closeBtnTooltip' data-tip="Close Ticket">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {% if ticket.is_closed %}
+                                    <button disabled>
+                                        <i class="far fa-check-circle  disabled cursor-not-allowed"></i>
+                                    </button>
+                                    {% else %}
+                                    <i class="far fa-check-circle closeBtn cursor-pointer" value={{ticket.id}} url={% url 'close_ticket' %}></i>
+                                    {% endif %}
+                                </form>
                             </span>
                         </li>
                         <li class="list-none">
                             <span class="tooltip tooltip tooltip-top" data-tip="View Details">
-                                <a href="#"><i class="fas fa-list-ul" data-tooltip-target="tooltip-detial"></i></a>
+                                <a href="{% url 'detail_ticket' pk=ticket.id %}"><i class="fas fa-list-ul" data-tooltip-target="tooltip-detial"></i></a>
                             </span>
                         </li>
                         <li class="list-none">
@@ -152,3 +162,9 @@
     {% include 'home/footer.html' %}
 </div>
 {% endblock body %}
+
+
+{% block js %}
+<script src="{% static 'js/closeticketajax.js' %}"></script>
+
+{% endblock js %}

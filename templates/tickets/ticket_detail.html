@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+{% include 'home/navbar.html' %}
+<div class="container flex justify-center h-full  mx-auto space-x-10 px-16">
+    <div class=" mt-28  border h-full w-3/4 shadow shadow-lg p-2">
+        {% include 'home/message.html' %}
+        <div class=" border border-pink-200 font-bold bg-gray-50 ">
+            <div class="bg-gray-200 ">
+
+                <div class="flex  text-pink-500 space-x-3 justify-end px-3">
+                    <li class="list-none">
+                        <span class="tooltip tooltip tooltip-top " id='closeBtnTooltip' data-tip="Close Ticket">
+                            <form method="post" >
+                                {% csrf_token %}
+                                {% if ticket.is_closed %}
+                                <button disabled>
+                                    <i class="far fa-check-circle  disabled cursor-not-allowed"></i>
+                                </button>
+                                {% else %}
+                                <i class="far fa-check-circle closeBtn cursor-pointer" value={{ticket.id}} url={% url 'close_ticket' %}></i>
+                                {% endif %}
+                            </form>
+                        </span>
+                    </li>
+                    <li class="list-none">
+                        <span class="tooltip tooltip tooltip-top" data-tip="Edit">
+                            <a href="#"><i class="far fa-edit"></i></a>
+                        </span>
+                    </li>
+                </div>
+            </div>
+            <div class="px-4 pb-4">
+                <h3 class="text-black text-xl font-bold signika">{{ticket.title}}</h3>
+                <hr>
+            </div>
+            <div class="description px-4 flex py-3 items-start justify-between">
+                <div>
+                    <p class="text-gray-700 signika text-sm w-2/3 my-2">
+                        {{ticket.description}}
+                    </p>
+                    <div class="flex px-2 space-x-5 bg-gray-100 py-2 uppercase self-items-end">
+                        <p>By: {{ticket.issued_by}}</p>
+                        <p>On: {{ticket.created_on}}</p>
+                    </div>
+                </div>
+                <div class=" px-2 py-1 border border-pink-200 w-1/6 cursor-pointer">
+                    {% if ticket.attachment %}
+                    <img src="{{ticket.attachment.url}}" alt="attachment">
+                    {% else %}
+                    <img src="{% static 'images/imgnotfound.png' %}" alt="img not found">
+                    {% endif %}
+                    <p class="text-xs">attachment</p>
+                </div>
+            </div>
+            <hr class="my-3 px-4 hr bg-pink-500">
+            <div>
+                <h4 class="py-4 bg-gray-100 text-gray-900 uppercase px-4">Follow Ups</h4>
+            </div>
+            <div class=" bg-gray-50 py-3 max-h-screen overflow-y-scroll">
+                {% for comment in comments %}
+                <div class="description px-4 flex py-3 items-start justify-between">
+                    <div>
+                        <p class="text-gray-700 signika text-sm w-2/3 my-2">{{comment.comment}}
+                        </p>
+                        <div class="flex space-x-5 bg-gray-100 py-2 uppercase">
+                            <p>By: {{comment.user_id}}</p>
+                            <p>On: {{comment.created_on}}</p>
+                        </div>
+                    </div>
+                    <div class="attachment p-2 border border-pink-200 w-1/6 cursor-pointer">
+                        {% if comment.attachment %}
+                        <img src="{{comment.attachment.url}}" alt="">
+                        {% else %}
+                        <img src="{% static 'images/imgnotfound.png' %}" alt="img not found">
+                        {% endif %}
+                        <p class="text-xs">attachment</p>
+                    </div>
+                </div>
+                <hr class="hr bg-gray-600">
+                {% endfor %}
+
+            </div>
+            <div class="commentBox m-4 ">
+                <form action="{% url 'post_comment' %}" method='post' enctype="multipart/form-data" autocomplete="off">
+                    {% csrf_token %}
+                    <input type="hidden" name='ticket_id' value="{{ticket.id}}">
+                    <label for="comment uppercase text-gray-900">Add your Comment:</label>
+                    <div class="flex space-x-6  items-center">
+                        {% if ticket.is_closed %}
+                        <textarea name="comment" id="comment" minlength="10" disabled
+                            class=" w-full border text-gray-900  border-pink-500 p-3 focus:outline-none cursor-not-allowed bg-gray-200 text-gray-100">Comment not allowed after ticket get closed
+                        </textarea>
+                        {% else %}
+                        <textarea name="comment" id="comment" minlength="10"
+                            class=" w-full border text-gray-900  border-pink-500 p-3 focus:outline-none"></textarea>
+
+                        <label for="attachment" class="text-pink-600 text-3xl">
+                            <i class="fas fa-paperclip"></i>
+                        </label>
+                        <button class="text-pink-600 text-3xl ">
+                            <img src={% static 'images/sendicon.svg' %} alt="" class=" w-10 h-8 sendicon">
+                        </button>
+                        {% endif %}
+
+
+                    </div>
+                    <p id="attName"></p>
+                    <input type="file" hidden id="attachment" accept="image/*" name="attachment">
+                    <div>
+                        <p>
+
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class=" mt-28  border h-full w-1/4 shadow shadow-lg">
+        <h3 class="uppercase text-gray-500 font-bold py-3 bg-gray-200 border border-pink-100 text-2xl text-center">
+            Ticket Detail</h3>
+        <div class=" px-4">
+
+            <p class="uppercase text-md py-3 font-bold text-gray-500">issued by: {{ticket.issued_by}}</p>
+            <p class="uppercase text-md py-3 font-bold text-gray-500">issued on: {{ticket.created_on|date:"M d, Y"}}</p>
+            <p class="uppercase text-md py-3 font-bold text-gray-500">status: {{status}}</p>
+
+            {% if status == 'Progressing' %}
+            <p class="uppercase text-md py-3 font-bold text-gray-500">Handling by: {{ticket.opened_by}}</p>
+            <p class="uppercase text-md py-3 font-bold text-gray-500">Opened at: {{ticket.opened_at|date:"M d, Y"}}</p>
+
+            {% endif %}
+
+            {% if status == 'Closed' %}
+            <p class="uppercase text-md py-3 font-bold text-gray-500">Opened by: {{ticket.opened_by}}</p>
+            <p class="uppercase text-md py-3 font-bold text-gray-500">Opened at: {{ticket.opened_at|date:"M d, Y"}}</p>
+            <p class="uppercase text-md py-3 font-bold text-gray-500">Handled by: {{ticket.assigned_to}}</p>
+            <p class="uppercase text-md py-3 font-bold text-gray-500">Closed by: {{ticket.closed_by}}</p>
+            <p class="uppercase text-md py-3 font-bold text-gray-500">Closed at: {{ticket.closed_at|date:"M d, Y"}}</p>
+
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% include 'home/footer.html' %}
+<script>
+    $("#attachment").change(function () {
+        $("#attName").text(this.files[0].name);
+    });
+
+
+
+</script>
+
+{% endblock body %}
+
+{% block js %}
+<script src="{% static 'js/closeticketajax.js' %}"></script>
+
+{% endblock js %}
