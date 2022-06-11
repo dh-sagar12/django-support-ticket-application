@@ -1,5 +1,7 @@
 from time import timezone
 from django.shortcuts import render
+from django.db.models import   Q
+
 
 # Create your views here.
 import uuid
@@ -18,8 +20,6 @@ from tickets.views import add_new_ticket, get_customer_monthly_summary, get_tick
 @login_required(login_url='login')
 def home(request):
     if request.user.is_staff or request.user.is_admin:
-        monthly_ticket_count = get_monthly_ticket_and_solved_ticket_chart(request)
-        print(monthly_ticket_count)
         params = get_ticket_details_for_admin_panel(request)
         return render(request, 'home/dashboard.html', params)
 

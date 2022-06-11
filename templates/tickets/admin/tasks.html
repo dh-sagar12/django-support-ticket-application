@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+{% include 'home/navbar.html' %}
+
+<div class="w-full md:w-1/2 p-3  m-auto  pt-32" >
+    <div class="bg-white border rounded shadow">
+        <div class="border-b p-3">
+            <h5 class="font-bold uppercase text-gray-600 ">Your peding and Assigned tasks</h5>
+        </div>
+        <div class="p-7 h-96 overflow-x-hidden overflow-scroll">
+            {% if tasks %}
+            {% for task in tasks %}
+            <div class="py-3">
+                <div class="flex-shrink pr-3 my-2">
+                    <div class="flex items-center">
+                        <h5 class="font-bold mx-1 text-sm uppercase text-gray-700">{{ task.title }}</h5>
+                        <p class="rounded rounded-xl border leading-1 mx-5 px-2 bg-gray-200  border-pink-500 font-mono text-xs font-bold">
+                            <span class='text-black'>{{task.priority_id}}</span>
+                        </p>
+                    </div>
+                    <p class='mx-1 text-sm text-grey-300'>{{ task.description|truncatechars:100}}</p>
+                </div>
+                <button class="uppercase bg-pink-500 text-xs text-gray-200 px-2 leading-4 mx-1 rounded rounded-lg">
+                    <a href="{% url 'detail_ticket' pk=task.id %}">follow up &rarr;</a>
+                </button>
+            </div>
+            <hr>
+
+            {% endfor %}
+            {% else %}
+                <div class="h-96 text-gray-500 font-bold  justify-center m-8 flex items-center ">
+                    <p class=" flex justify-center items-center">
+                        No Content to Show
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% include 'home/footer.html' %}
+
+
+{% endblock body %}

@@ -1,8 +1,19 @@
 {% extends 'base.html' %}
 {% block message %}
 {% if messages %}
-        {% for message in messages %}
+        {% comment %} {% for message in messages %}
             <p class='messages' id ='messages'>{{message}} </p>
+        {% endfor %} {% endcomment %}
+
+        {% for message in messages %}
+        <div id = 'messages' class="max-w-xs messages shadow mx-auto py-1 border bg-white flex border-pink-300 shadow-md justify-center space-x-3 items-center rounded rounded-md text-center">
+            {% if type == 'success' %}
+                <i class="far fa-check-circle text-green-600"></i>
+            {% else %}
+                <i class="far fa-times-circle text-red-600"></i>
+            {% endif %}
+            <p class="text-md  text-black">{{message}}</p>
+        </div>
         {% endfor %}
 {% endif %}
 <p class="msgRes" ></p>

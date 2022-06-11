@@ -4,31 +4,79 @@
 {% block body %}
 {% include 'home/navbar.html' %}
 <div class="container flex justify-center h-full  mx-auto space-x-10 px-16">
+    {% if request.user.is_admin %}
+    <div class=" mt-28  border h-full w-1/4 shadow shadow-lg">
+        <h3 class="uppercase text-gray-500 font-bold py-3 bg-gray-200 border border-pink-100 text-2xl text-center">
+            assign staff</h3>
+        <form action="{% url 'assign_staff' %}" method="post">
+            {% csrf_token %}
+            <div class=" px-4 py-5">
+            {% if ticket.is_closed %}
+            <p class='my-12 text-center'>Ticket has been already Closed</p> 
+
+            {% else %}
+                <div class="py-4">
+                    <input type="hidden" name='id' value='{{ticket.id}}'>
+                    {% if ticket.assigned_to  is not None or ticket.opened_by is not null %}
+                        <select disabled class='bg-gray-200 border border-gray-300 text-gray-500 cursor-not-allowed text-md rounded-sm w-full block  '>
+
+                    {% else %}
+                        <select id="users" name="staff_name"  class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-sm focus:ring-pink-500 focus:border-pink-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-pink-500 dark:focus:border-pink-500">
+                    {% endif %}
+                        {% if ticket.assigned_to  is not None %}
+                            <option selected class='text-center'>{{ticket.assigned_to}}</option>
+                            {% else %}
+                            <option selected class='text-center'>Choose Staff</option>
+                        {% endif %}
+                        {% for staff in staffs %}
+                            <option value="{{staff.id}}" class='text-center'>{{staff.first_name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="button uppercase text-center w-1/2 m-auto cursor-pointer bg-pink-600 px-2 py-1 text-white rounded-md" >
+                    {% if ticket.assigned_to  is not None or ticket.opened_by is not null %}
+                        <button type="submit" disabled class="cursor-not-allowed ">save</button>
+                    {% else %}
+                        <button type="submit">save</button>
+                    {% endif %}
+                    
+                </div>
+            {% endif %}
+
+            </div>
+        </form>
+    </div>
+    {% endif %}
+
     <div class=" mt-28  border h-full w-3/4 shadow shadow-lg p-2">
         {% include 'home/message.html' %}
         <div class=" border border-pink-200 font-bold bg-gray-50 ">
             <div class="bg-gray-200 ">
 
                 <div class="flex  text-pink-500 space-x-3 justify-end px-3">
+
+                    {% if not ticket.is_opened  %}
+                        {% if request.user.is_admin or request.user.is_staff %}
+                            <li class="list-none">
+                                <span class="tooltip tooltip tooltip-top" id='openBtnTooltip' data-tip="Open Ticket">
+                                    <i class="far fa-plus-square openTicketBtn cursor-pointer" value={{ticket.id}} 
+                                    url= {% url 'open_ticket' %}>
+                                    </i>
+                                </span>
+                            </li>
+                            {% endif %}
+                        {% endif %}
+
+                    {% if not ticket.is_closed %}
                     <li class="list-none">
-                        <span class="tooltip tooltip tooltip-top " id='closeBtnTooltip' data-tip="Close Ticket">
-                            <form method="post" >
-                                {% csrf_token %}
-                                {% if ticket.is_closed %}
-                                <button disabled>
-                                    <i class="far fa-check-circle  disabled cursor-not-allowed"></i>
-                                </button>
-                                {% else %}
-                                <i class="far fa-check-circle closeBtn cursor-pointer" value={{ticket.id}} url={% url 'close_ticket' %}></i>
-                                {% endif %}
-                            </form>
+                        <span class="tooltip tooltip tooltip-top" id='closeBtnTooltip' data-tip="Close Ticket">
+                            <i class="far fa-check-circle closeBtn cursor-pointer" value={{ticket.id}}
+                             url={% url 'close_ticket' %}>
+                            </i>
                         </span>
                     </li>
-                    <li class="list-none">
-                        <span class="tooltip tooltip tooltip-top" data-tip="Edit">
-                            <a href="#"><i class="far fa-edit"></i></a>
-                        </span>
-                    </li>
+                    {% endif %}
+
                 </div>
             </div>
             <div class="px-4 pb-4">
@@ -47,7 +95,7 @@
                 </div>
                 <div class=" px-2 py-1 border border-pink-200 w-1/6 cursor-pointer">
                     {% if ticket.attachment %}
-                    <img src="{{ticket.attachment.url}}" alt="attachment">
+                    <img src="{{ticket.attachment.url}}" class='attachmentImg' alt="attachment" data-modal-toggle="large-modal">
                     {% else %}
                     <img src="{% static 'images/imgnotfound.png' %}" alt="img not found">
                     {% endif %}
@@ -71,10 +119,11 @@
                     </div>
                     <div class="attachment p-2 border border-pink-200 w-1/6 cursor-pointer">
                         {% if comment.attachment %}
-                        <img src="{{comment.attachment.url}}" alt="">
+                            <img src="{{comment.attachment.url}}" class='attachmentImg' alt="" data-modal-toggle="large-modal" >
                         {% else %}
-                        <img src="{% static 'images/imgnotfound.png' %}" alt="img not found">
+                            <img src="{% static 'images/imgnotfound.png' %}" alt="img not found">
                         {% endif %}
+
                         <p class="text-xs">attachment</p>
                     </div>
                 </div>
@@ -92,6 +141,10 @@
                         <textarea name="comment" id="comment" minlength="10" disabled
                             class=" w-full border text-gray-900  border-pink-500 p-3 focus:outline-none cursor-not-allowed bg-gray-200 text-gray-100">Comment not allowed after ticket get closed
                         </textarea>
+                        {% elif  ticket.assigned_to != request.user and  ticket.opened_by != request.user and request.user.is_staff %}
+                            <textarea name="comment" id="comment" minlength="10" disabled
+                            class=" w-full border text-gray-900  border-pink-500 p-3 focus:outline-none cursor-not-allowed bg-gray-200 text-gray-100">Commenting only avaible for ticket assigned to you or opened by you
+                            </textarea>
                         {% else %}
                         <textarea name="comment" id="comment" minlength="10"
                             class=" w-full border text-gray-900  border-pink-500 p-3 focus:outline-none"></textarea>
@@ -127,7 +180,7 @@
             <p class="uppercase text-md py-3 font-bold text-gray-500">status: {{status}}</p>
 
             {% if status == 'Progressing' %}
-            <p class="uppercase text-md py-3 font-bold text-gray-500">Handling by: {{ticket.opened_by}}</p>
+            <p class="uppercase text-md py-3 font-bold text-gray-500">Handling by: {{ticket.opened_by   }}</p>
             <p class="uppercase text-md py-3 font-bold text-gray-500">Opened at: {{ticket.opened_at|date:"M d, Y"}}</p>
 
             {% endif %}
@@ -135,7 +188,12 @@
             {% if status == 'Closed' %}
             <p class="uppercase text-md py-3 font-bold text-gray-500">Opened by: {{ticket.opened_by}}</p>
             <p class="uppercase text-md py-3 font-bold text-gray-500">Opened at: {{ticket.opened_at|date:"M d, Y"}}</p>
-            <p class="uppercase text-md py-3 font-bold text-gray-500">Handled by: {{ticket.assigned_to}}</p>
+            {% if ticket.assigned_to is None %}
+                <p class="uppercase text-md py-3 font-bold text-gray-500">Handled by: {{ticket.closed_by}}</p>
+                {% else %}
+                <p class="uppercase text-md py-3 font-bold text-gray-500">Handled by: {{ticket.assigned_to}}</p>
+            {% endif %}
+            
             <p class="uppercase text-md py-3 font-bold text-gray-500">Closed by: {{ticket.closed_by}}</p>
             <p class="uppercase text-md py-3 font-bold text-gray-500">Closed at: {{ticket.closed_at|date:"M d, Y"}}</p>
 
@@ -143,6 +201,7 @@
         </div>
     </div>
 </div>
+{% include 'tickets/showattachmentmodal.html' %}
 {% include 'home/footer.html' %}
 <script>
     $("#attachment").change(function () {

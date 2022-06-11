@@ -13,38 +13,43 @@
             <div class="shadow shadow-md h-auto mx-4 pt-8">
                 <div class="flex justify-between  p-2 border border-pink-200 font-bold bg-gray-50 ">
                     <p class="uppercase">Issued On: {{ticket.created_on}}</p>
-
-                    {% if ticket.is_opened and ticket.assigned_to is not null and not ticket.is_closed %}
+                    {% if ticket.assigned_to is not null and not ticket.is_opened and not ticket.is_closed %}
                         <p class="uppercase">Status: Assigned</p>
                     {% elif ticket.is_closed and ticket.closed_by is not null %}
                         <p class="uppercase">Status: Closed</p>
+                    {% elif ticket.is_opened  %}
+                        <p class="uppercase">Status: Progressing</p>
                     {% else %}
                         <p class="uppercase">Status: Pending</p>
                     {% endif %}
 
                     <div class="flex  text-pink-500 space-x-3">
+
+                    {% if not ticket.is_opened %}
+                        {% if  request.user.is_admin or request.user.is_staff%}
+                            <li class="list-none">
+                                <span class="tooltip tooltip tooltip-top" id='openBtnTooltip' data-tip="Open Ticket">
+                                    <i class="far fa-plus-square openTicketBtn cursor-pointer" value={{ticket.id}} 
+                                    url= {% url 'open_ticket' %}>
+                                    </i>
+                                </span>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if not ticket.is_closed %}
                         <li class="list-none">
                             <span class="tooltip tooltip tooltip-top " id='closeBtnTooltip' data-tip="Close Ticket">
                                 <form method="post">
                                     {% csrf_token %}
-                                    {% if ticket.is_closed %}
-                                    <button disabled>
-                                        <i class="far fa-check-circle  disabled cursor-not-allowed"></i>
-                                    </button>
-                                    {% else %}
                                     <i class="far fa-check-circle closeBtn cursor-pointer" value={{ticket.id}} url={% url 'close_ticket' %}></i>
-                                    {% endif %}
                                 </form>
                             </span>
                         </li>
+                    {% endif %}
                         <li class="list-none">
                             <span class="tooltip tooltip tooltip-top" data-tip="View Details">
                                 <a href="{% url 'detail_ticket' pk=ticket.id %}"><i class="fas fa-list-ul" data-tooltip-target="tooltip-detial"></i></a>
-                            </span>
-                        </li>
-                        <li class="list-none">
-                            <span class="tooltip tooltip tooltip-top" data-tip="Edit">
-                                <a href="#"><i class="far fa-edit"></i></a>
                             </span>
                         </li>
                     </div>

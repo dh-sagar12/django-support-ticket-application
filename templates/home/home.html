@@ -12,17 +12,8 @@ Your Support Application
     <div class="container w-full mx-auto pt-28 ">
 
         <!-- message  -->
-        {% if msg %}
-            <div
-                class="max-w-xs shadow mx-auto py-1 border flex border-pink-300 shadow-md justify-center space-x-3 items-center rounded rounded-md text-center">
-                {% if type == 'success' %}
-                    <i class="far fa-check-circle text-green-600"></i>
-                {% else %}
-                    <i class="far fa-times-circle text-red-600"></i>
-                {% endif %}
-                <p class="text-md font-bold">{{msg}}</p>
-            </div>
-        {% endif %}
+        {% include 'home/message.html' %}
+
 
         <!-- message -->
 

@@ -10,7 +10,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@2.15.2/dist/full.css" rel="stylesheet" type="text/css" />
 
-    <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.7/dist/flowbite.min.css" />
     <link
         href="https://fonts.googleapis.com/css2?family=Bungee&family=Lora:ital@1&family=Poppins:ital,wght@0,100;0,400;1,300&family=Signika:wght@300&family=Ubuntu:ital,wght@0,300;1,300;1,400;1,500&display=swap"
         rel="stylesheet">
@@ -24,7 +23,9 @@
     <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
         integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous"> -->
     <!--Replace with your tailwind.css once created-->
-
+    {% block style %}
+        
+    {% endblock style %}
 
     <title>
         {%block title %}Home- Support App{% endblock %}
@@ -74,21 +75,24 @@
 
     }
 
+
     .messages {
         position: absolute!important;
         text-align: center!important;
         left: 32%!important;
         top: 21%!important;
-        display: inline;
-        border: 2px solid pink!important;
-        border-radius: 12%!important;
-        color: rgb(255, 0, 0)!important;
+        display: flex;
         padding: 8px 12px!important;
         background-color: rgb(255, 209, 216)!important;
+        color: black;
         z-index: 100!important;
         transition: top, ease-in, 500ms!important;
     }
 
+
+    .attachment-img{
+        height: 500px
+    }
     input:focus,
     input:active {
         outline: none !important;
@@ -191,10 +195,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
         integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="{% static  '/js/countMe.min.js' %}"></script>
 
-    <script src="https://unpkg.com/flowbite@1.4.7/dist/flowbite.js"></script>
-    <script src="https://unpkg.com/flowbite@1.4.7/dist/datepicker.js"></script>
 
 </body>
 
