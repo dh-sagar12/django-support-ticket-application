@@ -7,7 +7,7 @@
 
         {% for message in messages %}
         <div id = 'messages' class="max-w-xs messages shadow mx-auto py-1 border bg-white flex border-pink-300 shadow-md justify-center space-x-3 items-center rounded rounded-md text-center">
-            {% if type == 'success' %}
+            {% if message.tags == 'success' %}
                 <i class="far fa-check-circle text-green-600"></i>
             {% else %}
                 <i class="far fa-times-circle text-red-600"></i>

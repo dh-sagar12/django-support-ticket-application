@@ -8,6 +8,7 @@ import uuid
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.contrib.auth import authenticate
+from django.contrib import messages
 from django.contrib.auth import login as django_login
 from django.contrib.auth.decorators import login_required
 from datetime import date, timedelta
@@ -44,6 +45,7 @@ def home(request):
             form = TicketForm(request.POST, request.FILES)
             if form.is_valid():
                 ticket = form.save(commit=False)
+                messages.success(request, 'Ticket has been succussfully added!!')
                 ticket.issued_by = request.user
                 ticket.save()
                 return redirect(reverse('home'), kwargs= {'message': {'msg': 'TIcket Has been Submitted successfully!!', 'type': 'success'}})
@@ -51,8 +53,3 @@ def home(request):
 
         return render(request, 'home/home.html', params)
 
-
-
-def addTicket(request):
-    if request.user.is_active:
-        return render(request, 'home/home.html')
