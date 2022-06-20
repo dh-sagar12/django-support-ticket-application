@@ -11,6 +11,8 @@ urlpatterns = [
         path('ticket/assign/', views.get_ticket_assign, name='assign_staff'),
         path('ticket/mts-chart/', views.get_monthly_ticket_and_solved_ticket_chart, name='get_monthly_ticket_and_solved_ticket_chart'),
         path('task/', views.get_todo_task, name='get_todo_task'),
+        # path('mail/', views.send_assigned_message_to_staff, name='send_assigned_message_to_staff' ),
+
 
 
 

@@ -1,7 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block style %}
+    <style>
+       
+    </style>
+
+{% endblock style %}
+
 {% block body %}
 {% include 'home/navbar.html' %}
+
 <div class="container grid grid-cols-4 mx-10">
     <div
         class="container shadow border shadow-md mt-28 bg-white mb-6 col-span-3 max-w-4xl mx-auto  border border-gray-300 ">
@@ -72,94 +81,63 @@
     </div>
     <div class="container shadow border shadow-md mt-28 bg-white  h-50 mb-6">
         <h3 class="uppercase text-gray-500 font-bold py-3 bg-gray-200 border border-pink-100 text-2xl text-center">
-            Filters</h3>
-        <div class="flex flex-col  mb-4 p-4">
-
-
-            <div class="flex-flex-col">
-                <h3 class="text-md py-3 font-bold">Duration</h3>
-                <div date-rangepicker class="flex items-center">
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <i class="far fa-calendar-alt w-5 h-5 text-pink-500  cursor-pointer"></i>
+            Filters</h3>    
+        <form action="" method="get">
+            <div class="flex flex-col  mb-4 p-4">
+                <div class="flex-flex-col">
+                    <h3 class="text-md py-3 font-bold">Duration</h3>
+                    <div date-rangepicker class="flex items-center">
+                        <div class="">
+                            <input name="from" type="date"
+                                class="bg-gray-50 border py-2  border-gray-300 text-gray-900 sm:text-sm rounded-md  focus:outline-none  focus:border-pink-600  w-full px-1"
+                                placeholder="dd-mm-yyyy">
                         </div>
-                        <input name="start" type="text" datepicker datepicker-format="yyyy/mm/dd"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-md  focus:outline-none  focus:border-pink-600  w-full pl-8"
-                            placeholder="Select date start">
-                    </div>
-                    <span class="mx-4 text-gray-500">to</span>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <i class="far fa-calendar-alt w-5 h-5 text-pink-500 cursor-pointer"></i>
+                        <span class="mx-2 text-gray-500">to</span>
+                        <div class="">
+                            <input name="to" type="date" 
+                                class="bg-gray-50 py-2 border border-gray-300 text-gray-900 sm:text-sm rounded-md  focus:outline-none  focus:border-pink-600  w-full px-1"
+                                placeholder="dd-mm-yyyy">
                         </div>
-                        <input name="start" type="text" datepicker datepicker-format="yyyy/mm/dd"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-md  focus:outline-none  focus:border-pink-600  w-full pl-8"
-                            placeholder="Select date start">
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="flex space-x-14">
-                <div class="flex flex-col">
-                    <h3 class="text-md py-3 font-bold ">Stage</h3>
-                    <div>
-                        <input id="pending" type="checkbox" value="" name="pending"
-                            class="w-4 h-4 text-pink-600 bg-gray-100 rounded border-gray-300 focus:outline-none">
-                        <label for="pending"
-                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Pendings</label>
-                    </div>
-
-                    <div>
-                        <input id="completed" type="checkbox" value="" name="completed"
-                            class="w-4 h-4 text-pink-600 bg-gray-100 rounded border-gray-300 focus:outline-none ">
-                        <label for="completed"
-                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Completed</label>
-                    </div>
-
-                    <div>
-                        <input id="progressing" type="checkbox" value="" name="progressing"
-                            class="w-4 h-4 text-pink-600 bg-gray-100 rounded border-gray-300 focus:outline-none ">
-                        <label for="progressing"
-                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Progressing</label>
                     </div>
                 </div>
 
 
-
-                <div class="flex flex-col">
-                    <h3 class="text-md py-3 font-bold ">Priority</h3>
-                    <div>
-                        <input id="critical" type="checkbox" value="" name="critical"
-                            class="w-4 h-4 text-pink-600 bg-gray-100 rounded border-gray-300 focus:outline-none ">
-                        <label for="critical"
-                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Critical</label>
-                    </div>
-
-                    <div>
-                        <input id="medium" type="checkbox" value="" name="medium"
-                            class="w-4 h-4 text-pink-600 bg-gray-100 rounded border-gray-300 focus:outline-none ">
-                        <label for="medium"
-                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Medium</label>
-                    </div>
-
-                    <div>
-                        <input id="normal" type="checkbox" value="" name="normal"
-                            class="w-4 h-4 text-pink-600 bg-gray-100 rounded border-gray-300 focus:outline-none ">
-                        <label for="normal"
-                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Normal</label>
+                <div class="flex space-x-10">
+                    <div class="flex flex-col">
+                        <h3 class="text-md py-3 font-bold ">Stage</h3>
+                                                    
+                        <select name="stage" id="cars" class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-sm focus:ring-pink-500 focus:border-pink-500 block  w-32 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-pink-500 dark:focus:border-pink-500">
+                            <option selected class='text-center' value=''>Select Stage</option>
+                            <option class='text-center' value="pending">Pendings</option>
+                            <option class='text-center' value="assigned">Assigned</option>
+                            <option class='text-center' value="progressing">Progressing</option>
+                            <option class='text-center' value="solved">Solved</option>
+                        </select>
                     </div>
 
 
+
+                    <div class="flex flex-col">
+                        <h3 class="text-md py-3 font-bold ">Priority</h3>
+                        <select name="priority" id="cars" class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-sm focus:ring-pink-500 focus:border-pink-500 block w-32 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-pink-500 dark:focus:border-pink-500">
+                            <option selected class='text-center' value=''>Select Priority</option>
+                            <option class='text-center' value="critical">Critical</option>
+                            <option class='text-center' value="medium">Medium</option>
+                            <option class='text-center' value="normal">Normal</option>
+                            <option class='text-center' value="solved">Solved</option>
+                        </select>
+
+
+                    </div>
+                </div>
+
+                <div class="flex text-center justify-center items-center my-4">
+                    <button class="border shadow shadow-md px-5 py-2 bg-pink-600 rounded rounded-md text-white">
+                        submit
+                    </button>
                 </div>
             </div>
-
-            <div class="flex text-center justify-center items-center my-4">
-                <button class="border shadow shadow-md px-5 py-2 bg-pink-600 rounded rounded-md text-white">
-                    submit
-                </button>
-            </div>
-        </div>
+        </form>
     </div>
 </div>
 <hr class="text-black my-3 bg-black ">

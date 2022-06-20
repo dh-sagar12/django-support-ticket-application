@@ -6,7 +6,7 @@
         {% endfor %} {% endcomment %}
 
         {% for message in messages %}
-        <div id = 'messages' class="max-w-xs messages shadow mx-auto py-1 border bg-white flex border-pink-300 shadow-md justify-center space-x-3 items-center rounded rounded-md text-center">
+        <div id = 'messages' class="w-46 messages shadow mx-auto py-1 border bg-white flex border-pink-300 shadow-md justify-center space-x-3 items-center rounded rounded-md text-center">
             {% if message.tags == 'success' %}
                 <i class="far fa-check-circle text-green-600"></i>
             {% else %}

@@ -1,5 +1,7 @@
 import datetime
 from datetime import datetime as dt
+from django.core.mail import EmailMessage
+from django.conf import settings
 from django.contrib import messages
 from django.http import   JsonResponse
 from django.shortcuts import redirect, render
@@ -10,6 +12,10 @@ from account.models import User
 from tickets.forms import TicketForm
 from tickets.models import Comment, Ticket
 from django.db import connection
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+
+
 
 
 
@@ -56,8 +62,10 @@ def add_new_ticket(request):
 
 @login_required(login_url='login')
 def get_my_tickets(request):
+
     if request.user.is_admin or request.user.is_staff:
         my_tickets =  Ticket.objects.all().order_by('is_opened')
+
     else:
         my_tickets =  Ticket.objects.filter(issued_by= request.user.id).order_by('-created_on')
     
@@ -140,10 +148,43 @@ def get_ticket_assign(request):
         else:
             ticket.assigned_to = staff
             ticket.save() 
+            send_assigned_message_to_staff(request, ticket, staff)
             messages.success(request, 'Ticket has been  assigned')
             return redirect(view_detailed_ticket, id)
     else:
         return redirect(reverse('home'))
+
+def send_assigned_message_to_staff(request, ticket, staff):
+    assigned_by  =  request.user
+    staff_name =  staff.first_name
+    staff_email =  staff.email
+    title =  ticket.title
+    ticket_id = ticket.id
+    base_url = get_current_site(request).domain
+    desc =  ticket.description
+    created_by =  ticket.issued_by
+    assigned_on = datetime.datetime.now()
+    priority = ticket.priority_id
+    subject = "A new ticket has been created."
+    message = render_to_string('sendEmails/ticket_assigned_email.html',{
+        'name': staff_name,
+        'title': title,
+        'description': desc,
+        'created_on': assigned_on,
+        'priority': priority,
+        'assigned_by': assigned_by,
+        'created_by': created_by,
+        'ticket_id': ticket_id,
+        'base_url':  base_url
+    })
+    email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [staff_email])
+    email.fail_silently = False
+    email.content_subtype = "html"
+    print(base_url)
+    email.send()
+    # return render(request, 'sendEmails/ticket_assigned_email.html')
+
+
 
 @login_required(login_url='login')
 def get_ticket_close(request):
@@ -158,7 +199,31 @@ def get_ticket_close(request):
             ticket.closed_by = request.user
             ticket.closed_at =  datetime.datetime.now()
             ticket.save()
+            # created_user =  User.objects.get(id= ticket.issued_by_id)
+            send_ticket_closed_email(request, ticket)
             return JsonResponse({'status': 'opened', 'res': 'Ticket has been closed' })
+
+
+def  send_ticket_closed_email(request, ticket):
+    closed_by  =  request.user
+    ticket=  ticket
+    created_user =  ticket.issued_by.first_name
+    created_user_email = ticket.issued_by.email
+    base_url = get_current_site(request).domain
+    closed_at = datetime.datetime.now()
+    subject = "A new ticket has been created."
+    message = render_to_string('sendEmails/ticket_closed_email.html',{
+        'ticket':ticket,
+        'closed_by': closed_by,
+        'created_user': created_user,
+        'base_url': base_url,
+        'closed_at': closed_at,
+    })
+    email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [created_user_email])
+    email.fail_silently = False
+    email.content_subtype = "html"
+    print(base_url)
+    email.send()
 
 
 @login_required(login_url='login')

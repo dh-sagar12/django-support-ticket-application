@@ -12,6 +12,7 @@
 {% block body %}
 <div class="relative flex flex-col justify-center min-h-screen overflow-hidden">
     <div class="w-full p-6  m-auto bg-white border-t-4 border-pink-600 rounded-md shadow-md border-top lg:max-w-lg">
+    {% include 'home/message.html' %}
         <h1 class="text-3xl font-semibold text-center text-pink-600">Sign up</h1>
         <form method="post" action='/account/signup/' class="mt-4">
             {% csrf_token %}
