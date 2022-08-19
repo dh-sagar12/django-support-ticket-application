@@ -178,7 +178,7 @@ def send_assigned_message_to_staff(request, ticket, staff):
         'base_url':  base_url
     })
     email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [staff_email])
-    email.fail_silently = False
+    email.fail_silently = True
     email.content_subtype = "html"
     print(base_url)
     email.send()
@@ -220,7 +220,7 @@ def  send_ticket_closed_email(request, ticket):
         'closed_at': closed_at,
     })
     email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [created_user_email])
-    email.fail_silently = False
+    email.fail_silently = True
     email.content_subtype = "html"
     print(base_url)
     email.send()

@@ -77,7 +77,7 @@ def send_ticket_submmited_email(request, ticket):
 
     })
     email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [email])
-    email.fail_silently = False
+    email.fail_silently = True
     email.content_subtype = "html"
     email.send()
     # return render(request, 'sendEmails/ticket_creation_email.html')
